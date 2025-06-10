@@ -10,9 +10,12 @@ import (
 
 var users []models.User
 var isRegister bool = false
+var isLoggin bool = false
+
 
 func MenuUtama() {
 	for {
+		models.ClearScreen()
 		fmt.Println("\n=== MENU UTAMA ===")
 		if !isRegister {
 			fmt.Println("1. Register")
@@ -27,6 +30,7 @@ func MenuUtama() {
 		fmt.Print("Pilih menu: ")
 		var pilihan string
 		fmt.Scanln(&pilihan)
+		models.ClearScreen()
 
 		switch pilihan {
 		case "1":
@@ -37,10 +41,15 @@ func MenuUtama() {
 				fmt.Println("Sudah terdaftar.")
 			}
 		case "2":
-			if len(users) == 0 {
-				fmt.Println("Data tidak ditemukan")
+			if !isLoggin {
+				if len(users) == 0 {
+					fmt.Println("Data tidak ditemukan")
+				} else {
+					auth.Login(users)
+					isLoggin = true 
+				}
 			} else {
-				auth.Login(users)
+				fmt.Println("Anda sudah login.")
 			}
 		case "3":
 			if len(users) == 0 {

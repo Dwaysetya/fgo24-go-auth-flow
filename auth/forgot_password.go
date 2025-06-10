@@ -25,7 +25,7 @@ func ForgotPassword(users *[]models.User) {
 			newPass = strings.TrimSpace(newPass)
 
 			(*users)[i].Password = encryptPassworded(newPass)
-			fmt.Println("Password berhasil direset.")
+			fmt.Println("Password berhasil direset")
 			return
 		}
 	}

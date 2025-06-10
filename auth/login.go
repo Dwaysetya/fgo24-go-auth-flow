@@ -10,6 +10,8 @@ import (
 
 func Login(users []models.User) {
 	reader := bufio.NewReader(os.Stdin)
+	models.ClearScreen()
+
 	fmt.Println("\n=== LOGIN ===")
 
 	for i := 1; i <= 3; i++ {
@@ -20,21 +22,50 @@ func Login(users []models.User) {
 		fmt.Print("Password: ")
 		password, _ := reader.ReadString('\n')
 		password = strings.TrimSpace(password)
+		models.ClearScreen()
 
-		encrypted := EncryptPassword(password)
-
-		// Cek ke seluruh users
 		for _, user := range users {
-			if user.Email == email && user.Password == encrypted {
-				fmt.Println("Login berhasil! Selamat datang", user.Username)
+			if user.Email == email && user.Password == EncryptPassword(password) {
+				fmt.Println("\n✅ Login berhasil Selamat datang", user.Username)
+
+				fmt.Print("Tekan ENTER untuk melanjutkan...")
+				reader.ReadString('\n')
+				models.ClearScreen()
+
+				showLoginMenu(users)
 				return
 			}
 		}
-
-		fmt.Println("Login gagal! Email atau password salah.")
+		fmt.Println("Email atau password salah.")
 	}
-
-	fmt.Println("Gagal login setelah 3 kali percobaan.")
+	fmt.Println("Login gagal")
 	os.Exit(1)
+}
+
+func showLoginMenu(users []models.User) {
+	for {
+		fmt.Println(`
+=== MENU LOGIN ===
+1. Lihat daftar user
+2. Kembali
+		`)
+		fmt.Print("Pilih menu: ")
+		var pilihan string
+		fmt.Scanln(&pilihan)
+		models.ClearScreen()
+
+		switch pilihan {
+		case "1":
+			fmt.Println("\n=== DAFTAR USER TERDAFTAR ===")
+			for i, u := range users {
+				fmt.Printf("%d. %s (%s)\n", i+1, u.Username, u.Email)
+			}
+		case "2":
+			fmt.Println(" Logout berhasil. Kembali ke menu utama...")
+			return
+		default:
+			fmt.Println(" Pilihan tidak valid.")
+		}
+	}
 }
 
