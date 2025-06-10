@@ -1,16 +1,14 @@
-package register
+package auth
 
 import (
 	"bufio"
-	"crypto/md5"
-	"encoding/hex"
-	"fgo24-go-auth-flow/user"
+	"fgo24-go-auth-flow/models"
 	"fmt"
 	"os"
 	"strings"
 )
 
-func Register(users *[]user.User) {
+func Register(users *[]models.User) {
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("\n=== REGISTER ===")
@@ -26,9 +24,9 @@ func Register(users *[]user.User) {
 	password, _ := reader.ReadString('\n')
 	password = strings.TrimSpace(password)
 
-	encrypted := encryptPassword(password)
+	encrypted := EncryptPassword(password)
 
-	newUser := user.User{
+	newUser := models.User{
 		Username: username,
 		Email:    email,
 		Password: encrypted,
@@ -36,9 +34,8 @@ func Register(users *[]user.User) {
 
 	*users = append(*users, newUser)
 	fmt.Println("Registrasi berhasil")
+	
 }
 
-func encryptPassword(password string) string {
-	encrypt := md5.Sum([]byte(password))
-	return hex.EncodeToString(encrypt[:])
-}
+
+
